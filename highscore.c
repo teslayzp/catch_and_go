@@ -138,8 +138,8 @@ void display_highscores() {
     int count = load_highscores(scores, MAX_HIGHSCORES);
     
     printf("\n");
-    printf("╔════════════════════════════════════════════════════════╗\n");
-    printf("║                    HIGH SCORES                         ║\n");
+    printf("╔═══════════════════════════════════════════════════════╗\n");
+    printf("║                    HIGH SCORES                        ║\n");
     printf("╠════╦══════════════════╦═══════╦═══════╦═══════════════╣\n");
     printf("║ #  ║ Name             ║ Score ║ Speed ║ Date          ║\n");
     printf("╠════╬══════════════════╬═══════╬═══════╬═══════════════╣\n");

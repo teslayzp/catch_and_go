@@ -348,6 +348,7 @@ int main(){
         draw_border();
 
         if (interrupted && !quit_requested) {
+            toggle_pause();
             quit_requested = 1;
             interrupted = 0;
             mvprintw(2, (COLS - 30) / 2, "Are you sure you want to quit? (y/n)");
@@ -359,6 +360,7 @@ int main(){
             if (ch == 'y' || ch == 'Y') {
                 break;
             } else if (ch == 'n' || ch == 'N') {
+                toggle_pause();
                 move(LINES / 2, (COLS - 30) / 2);
                 clrtoeol();
                 refresh();
@@ -494,9 +496,9 @@ int main(){
         sprintf(speed_display, "Speed: %d (%dx points)", speed, (3 - speed) + 1);
         
         if(paused){
-            mvprintw(0, 2, "[PAUSED] | %s | %s | score:%d | time:%2ds", lives_display, speed_display, score, time_left);
+            mvprintw(0, 2, "[PAUSED] | %s | %s | score:%d | time:%2ds   ", lives_display, speed_display, score, time_left);
         }else{
-            mvprintw(0, 2, "a:left d:right h:hook s:slower f:faster | %s | %s | score:%d | time:%2ds", lives_display, speed_display, score, time_left);
+            mvprintw(0, 2, "a:left d:right h:hook s:slower f:faster | %s | %s | score:%d | time:%2ds   ", lives_display, speed_display, score, time_left);
         }
 
         if(!paused){
