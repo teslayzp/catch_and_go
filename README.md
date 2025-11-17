@@ -1,9 +1,20 @@
 # catch_and_go
 # 🎣 Fishing Game - System Programming Project
 
+<<<<<<< HEAD
 ![ss](https://raw.githubusercontent.com/teslayzp/repo/main/assets/ss.gif)
 
 
+=======
+
+
+
+![ss](https://raw.githubusercontent.com/teslayzp/repo/main/assets/ss.gif)
+
+
+
+
+>>>>>>> 1edc83f26b6bdf4e38157d3f1e5a1d1addbc86bc
 ## 📖 Project Overview
 
 An interactive terminal-based fishing game built in C using system calls and ncurses library. Players control a fishing boat, catch fish at different speeds for varying points, and compete for high scores while managing limited lives and time.
