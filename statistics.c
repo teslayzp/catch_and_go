@@ -5,6 +5,12 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
+#define green "\033[32m"
+#define reset "\033[0m"
+#define red   "\033[31m"
+#define blue  "\033[34m"
+
+
 // Log game statistics to file
 // System calls used: open(), write(), close(), lseek(), stat()
 int log_game_stats(GameStats* stats) {
@@ -78,14 +84,14 @@ void display_game_history() {
     int count = load_game_history(history, MAX_LOG_ENTRIES);
     
     printf("\n");
-    printf("╔═════════════════════════════════════════════════════════════════════╗\n");
-    printf("║                         GAME HISTORY                                ║\n");
-    printf("╠════╦══════════════╦══════════════╦═══════╦═══════╦═══════╦═══════╦══╣\n");
-    printf("║ #  ║ Date         ║ Player       ║ Score ║ Catch ║ Miss  ║ Speed ║ L║\n");
-    printf("╠════╬══════════════╬══════════════╬═══════╬═══════╬═══════╬═══════╬══╣\n");
+    printf(blue "╔═════════════════════════════════════════════════════════════════════╗\n" reset);
+    printf(blue "║                         GAME HISTORY                                ║\n" reset);
+    printf(blue "╠════╦══════════════╦══════════════╦═══════╦═══════╦═══════╦═══════╦══╣\n" reset);
+    printf(blue "║ #  ║ Date         ║ Player       ║ Score ║ Catch ║ Miss  ║ Speed ║ L║\n" reset);
+    printf(blue "╠════╬══════════════╬══════════════╬═══════╬═══════╬═══════╬═══════╬══╣\n" reset);
     
     if (count == 0) {
-        printf("║                    No game history available                         ║\n");
+        printf(blue "║                    No game history available                         ║\n" reset);
     } else {
         // Display most recent games first
         for (int i = count - 1; i >= 0 && i >= count - 20; i--) {
@@ -93,7 +99,7 @@ void display_game_history() {
             struct tm* tm_info = localtime(&history[i].timestamp);
             strftime(date_str, sizeof(date_str), "%Y-%m-%d", tm_info);
             
-            printf("║ %-2d ║ %-12s ║ %-12s ║ %5d ║ %5d ║ %5d ║   %d   ║ %d║\n",
+            printf(blue "║ %-2d ║ %-12s ║ %-12s ║ %5d ║ %5d ║ %5d ║   %d   ║ %d║\n" reset,
                    count - i,
                    date_str,
                    history[i].player_name,
@@ -105,8 +111,8 @@ void display_game_history() {
         }
     }
     
-    printf("╚════╩══════════════╩══════════════╩═══════╩═══════╩═══════╩═══════╩══╝\n");
-    printf("L = Lives Remaining\n");
+    printf(blue "╚════╩══════════════╩══════════════╩═══════╩═══════╩═══════╩═══════╩══╝\n" reset);
+    printf(red "L = Lives Remaining\n" reset);
 }
 
 // Display statistics for specific player
@@ -134,20 +140,20 @@ void display_player_stats(const char* player_name) {
     }
     
     if (total_games == 0) {
-        printf("\nNo statistics found for player: %s\n", player_name);
+        printf(green "\nNo statistics found for player: %s\n" reset, player_name);
         return;
     }
     
     printf("\n");
-    printf("╔════════════════════════════════════════════════╗\n");
-    printf("║         PLAYER STATISTICS: %-16s    ║\n", player_name);
-    printf("╠════════════════════════════════════════════════╣\n");
-    printf("║ Total Games Played:        %4d                ║\n", total_games);
-    printf("║ Best Score:                %4d                ║\n", best_score);
-    printf("║ Average Score:             %4d                ║\n", total_games > 0 ? total_score / total_games : 0);
-    printf("║ Total Fish Caught:         %4d                ║\n", total_caught);
-    printf("║ Total Hooks Missed:        %4d                ║\n", total_missed);
-    printf("║ Catch Rate:                %3d%%                ║\n", 
+    printf(green "╔════════════════════════════════════════════════╗\n" reset);
+    printf(green "║         PLAYER STATISTICS: %-16s    ║\n" reset, player_name);
+    printf(green "╠════════════════════════════════════════════════╣\n" reset);
+    printf(green "║ Total Games Played:        %4d                ║\n" reset, total_games);
+    printf(green "║ Best Score:                %4d                ║\n" reset, best_score);
+    printf(green "║ Average Score:             %4d                ║\n" reset, total_games > 0 ? total_score / total_games : 0);
+    printf(green "║ Total Fish Caught:         %4d                ║\n" reset, total_caught);
+    printf(green "║ Total Hooks Missed:        %4d                ║\n" reset, total_missed);
+    printf(green "║ Catch Rate:                %3d%%                ║\n" reset, 
            (total_caught + total_missed) > 0 ? (total_caught * 100) / (total_caught + total_missed) : 0);
-    printf("╚════════════════════════════════════════════════╝\n");
+    printf(green "╚════════════════════════════════════════════════╝\n" reset);
 }

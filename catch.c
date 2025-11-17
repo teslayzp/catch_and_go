@@ -8,6 +8,13 @@
 #include "highscore.h"
 #include "statistics.h"
 
+// ANSI color codes
+#define RED    "\033[31m"
+#define GREEN  "\033[32m"
+#define cyan "\033[36m"       
+#define BLUE   "\033[34m"
+#define RESET  "\033[0m"    // reset to default color
+
 volatile sig_atomic_t interrupted = 0;
 volatile sig_atomic_t pause_request = 0;
 volatile sig_atomic_t paused_flag = 0;
@@ -27,6 +34,16 @@ time_t start_time;
 time_t pause_start = 0;
 time_t total_pause_time = 0;
 char player_name[20] = "Player";
+
+
+// Global color pair IDs
+int COLOR_RED_PAIR = 1;
+int COLOR_GREEN_PAIR = 2;
+int COLOR_YELLOW_PAIR = 3;
+int COLOR_BLUE_PAIR = 4;
+int COLOR_MAGENTA_PAIR = 5;
+int COLOR_CYAN_PAIR = 6;
+
 
 int get_remaining_time(){
     time_t current = time(NULL);
@@ -70,15 +87,16 @@ typedef struct {
 } Fish;
 
 void draw_border() {
-    const char* wave = "~~~~    ";
     
+    const char* wave = "~~~~    ";
+
     time_t current_time = time(NULL);
     if (current_time != last_moss_update) {
         moss_reversed = !moss_reversed;
         wave_offset = (wave_offset + 1) % 8;
         last_moss_update = current_time;
     }
-    
+
     const char* moss_normal[] = {"(", " )", "(", " )", "("};
     const char* moss_reverse[] = {" )", "(", " )", "(", " )"};
     const char** moss = moss_reversed ? moss_reverse : moss_normal;
@@ -89,7 +107,7 @@ void draw_border() {
     if (start_moss < 0) start_moss = 0;
     int start_rowm = LINES - moss_len - 1;
     if (start_rowm < 0) start_rowm = 0;
-    
+    attron(COLOR_PAIR(2));
     for(int i = 0; i < moss_len; i++){
         mvaddstr(start_rowm + i, 5, "  ");
         mvaddstr(start_rowm + i, 10, "  ");
@@ -115,7 +133,7 @@ void draw_border() {
         mvaddstr(start_rowm + i, COLS / 2 + 40, moss[i]);
         mvaddstr(start_rowm + i, COLS / 2 + 45, moss[i]);
     }
-    
+    attroff(COLOR_PAIR(2));
     const char* castle[] = {
         "               T~~", "               |", "              /^\\", "             /   \\",
         " _   _   _  /     \\  _   _   _", "[ ]_[ ]_[ ]/ _   _ \\[ ]_[ ]_[ ]",
@@ -130,14 +148,17 @@ void draw_border() {
         int len = strlen(castle[i]);
         if (len > castle_width) castle_width = len;
     }
-    
+
+    attron(COLOR_PAIR(6));      //set cyan color for wave
     int wave_len = strlen(wave);
     for (int i = 0; i < COLS - 1; i++) {
         mvaddch(LINES / 4, i, '~');
         mvaddch(LINES / 4 + 1, i, wave[(i + wave_offset) % wave_len]);
         mvaddch(LINES / 4 + 2, i, wave[(i + wave_offset + 2) % wave_len]);
     }
-    
+    attroff(COLOR_PAIR(6));
+
+    attron(COLOR_PAIR(4));
     int start_col = COLS - castle_width - 1;
     if (start_col < 0) start_col = 0;
     int start_row = LINES - castle_len - 1;
@@ -146,6 +167,7 @@ void draw_border() {
     for(int i = 0; i < castle_len; i++){
         mvaddstr(start_row + i, start_col, castle[i]);
     }
+    attroff(COLOR_PAIR(4));
 }
 
 static void erase_boat(int boat_x) {
@@ -164,6 +186,8 @@ static void erase_boat(int boat_x) {
 }
 
 static void draw_boat_and_hook(int boat_x, int hook_depth) {
+
+    attron(COLOR_PAIR(1));          //set red color for boat and hook
     const char *boat_top = "    __/\\__   ";
     const char *boat_hull = "___/______\\__";
     int water_y = LINES / 4;
@@ -186,9 +210,12 @@ static void draw_boat_and_hook(int boat_x, int hook_depth) {
         }
         if (line_end_y < LINES) mvaddch(line_end_y, line_x, 'J');
     }
+    attroff(COLOR_PAIR(1));
+
 }
 
 void draw_fish(Fish* fish, const char** left_fish, const char** right_fish, int lines) {
+    attron(COLOR_PAIR(6));  //set cyan color for fish
     const char** art = (fish->dir == -1) ? left_fish : right_fish;
     for (int i = 0; i < lines; i++) {
         const char* s = art[i];
@@ -199,9 +226,11 @@ void draw_fish(Fish* fish, const char** left_fish, const char** right_fish, int 
             mvaddnstr(fish->row + i, fish->pos, s, len);
         }
     }
+    attroff(COLOR_PAIR(6));
 }
 
 void erase_fish(Fish* fish, int lines) {
+    attron(COLOR_PAIR(6));     //set cyan color for fish
     static const char blanks[] = "                                                                ";
     int erase_len = fish->width;
     if (erase_len > (int)sizeof(blanks) - 1) erase_len = (int)sizeof(blanks) - 1;
@@ -212,13 +241,14 @@ void erase_fish(Fish* fish, int lines) {
         if (len > avail) len = avail;
         mvaddnstr(fish->row + i, fish->pos, blanks, len);
     }
+    attroff(COLOR_PAIR(6));
 }
 
 void get_player_name() {
-    printf("\n╔════════════════════════════════════════════════╗\n");
-    printf("║          WELCOME TO FISHING GAME!              ║\n");
-    printf("╚════════════════════════════════════════════════╝\n");
-    printf("\nEnter your name (max 19 characters): ");
+    printf(cyan "\n╔════════════════════════════════════════════════╗\n" RESET);
+    printf(cyan "║          WELCOME TO FISHING GAME!              ║\n" RESET);
+    printf(cyan "╚════════════════════════════════════════════════╝\n" RESET);
+    printf(cyan "\nEnter your name (max 19 characters): " RESET);
     fgets(player_name, sizeof(player_name), stdin);
     player_name[strcspn(player_name, "\n")] = 0; // Remove newline
     if (strlen(player_name) == 0) {
@@ -230,20 +260,20 @@ void show_main_menu() {
     int choice;
     
     while(1) {
-        printf("\n╔════════════════════════════════════════════════╗\n");
-        printf("║              FISHING GAME MENU                 ║\n");
-        printf("╠════════════════════════════════════════════════╣\n");
-        printf("║  1. Start New Game                             ║\n");
-        printf("║  2. View High Scores                           ║\n");
-        printf("║  3. View Game History                          ║\n");
-        printf("║  4. View Player Statistics                     ║\n");
-        printf("║  5. Exit                                       ║\n");
-        printf("╚════════════════════════════════════════════════╝\n");
-        printf("\nEnter your choice: ");
+        printf(cyan "\n╔════════════════════════════════════════════════╗\n" RESET);
+        printf(cyan "║              FISHING GAME MENU                 ║\n" RESET);
+        printf(cyan "╠════════════════════════════════════════════════╣\n" RESET);
+        printf(cyan "║  1. Start New Game                             ║\n" RESET);
+        printf(cyan "║  2. View High Scores                           ║\n" RESET);
+        printf(cyan "║  3. View Game History                          ║\n" RESET);
+        printf(cyan "║  4. View Player Statistics                     ║\n" RESET);
+        printf(cyan "║  5. Exit                                       ║\n" RESET);
+        printf(cyan "╚════════════════════════════════════════════════╝\n" RESET);
+        printf(cyan "\nEnter your choice: " RESET);
         
         if (scanf("%d", &choice) != 1) {
             while(getchar() != '\n'); // Clear input buffer
-            printf("Invalid input! Please enter a number.\n");
+            printf(RED "Invalid input! Please enter a number.\n" RESET);
             continue;
         }
         while(getchar() != '\n'); // Clear remaining input
@@ -260,17 +290,17 @@ void show_main_menu() {
             case 4:
                 {
                     char search_name[20];
-                    printf("Enter player name: ");
+                    printf(GREEN "Enter player name: " RESET);
                     fgets(search_name, sizeof(search_name), stdin);
                     search_name[strcspn(search_name, "\n")] = 0;
                     display_player_stats(search_name);
                 }
                 break;
             case 5:
-                printf("\nThank you for playing! Goodbye!\n");
+                printf(BLUE "\nThank you for playing! Goodbye!\n" RESET);
                 exit(0);
             default:
-                printf("Invalid choice! Please try again.\n");
+                printf(RED "Invalid choice! Please try again.\n" RESET);
         }
     }
 }
@@ -288,6 +318,15 @@ int main(){
     noecho();
     curs_set(0);
     timeout(0);
+
+    start_color();
+    use_default_colors();
+    init_pair(COLOR_RED_PAIR, COLOR_RED, -1);
+    init_pair(COLOR_GREEN_PAIR, COLOR_GREEN, -1);
+    init_pair(COLOR_YELLOW_PAIR, COLOR_YELLOW, -1);
+    init_pair(COLOR_BLUE_PAIR, COLOR_BLUE, -1);
+    init_pair(COLOR_MAGENTA_PAIR, COLOR_MAGENTA, -1);
+    init_pair(COLOR_CYAN_PAIR, COLOR_CYAN, -1);
 
     signal(SIGINT, handle_sigint);
     signal(SIGTSTP, handle_sigtstp);
@@ -544,22 +583,22 @@ int main(){
     
     // Display final statistics
     printf("\n\n");
-    printf("╔════════════════════════════════════════════════╗\n");
-    printf("║           GAME OVER - FINAL RESULTS            ║\n");
-    printf("╠════════════════════════════════════════════════╣\n");
-    printf("║ Player: %-38s ║\n", player_name);
-    printf("║ Final Score: %-33d ║\n", score);
-    printf("║ Fish Caught: %-33d ║\n", fish_caught_total);
-    printf("║ Hooks Missed: %-32d ║\n", hooks_missed_total);
-    printf("║ Lives Remaining: %-29d ║\n", lives);
-    printf("║ Final Speed Level: %-27d ║\n", speed);
-    printf("╚════════════════════════════════════════════════╝\n");
+    printf(cyan "╔════════════════════════════════════════════════╗\n" RESET);
+    printf(cyan "║           GAME OVER - FINAL RESULTS            ║\n" RESET);
+    printf(cyan "╠════════════════════════════════════════════════╣\n" RESET);
+    printf(cyan "║ Player: %-38s ║\n" RESET, player_name);
+    printf(cyan "║ Final Score: %-33d ║\n" RESET, score);
+    printf(cyan "║ Fish Caught: %-33d ║\n" RESET, fish_caught_total);
+    printf(cyan "║ Hooks Missed: %-32d ║\n"RESET, hooks_missed_total);
+    printf(cyan "║ Lives Remaining: %-29d ║\n" RESET, lives);
+    printf(cyan "║ Final Speed Level: %-27d ║\n" RESET, speed);
+    printf(cyan "╚════════════════════════════════════════════════╝\n" RESET);
     
     // Check and save high score
     if (is_highscore(score)) {
-        printf("\n🎉 CONGRATULATIONS! You achieved a HIGH SCORE! 🎉\n");
+        printf(GREEN "\n🎉 CONGRATULATIONS! You achieved a HIGH SCORE! 🎉\n" RESET);
         if (add_highscore(player_name, score, speed) == 0) {
-            printf("Your score has been saved to the high score table!\n");
+            printf(GREEN "Your score has been saved to the high score table!\n" RESET);
         }
     }
     

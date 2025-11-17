@@ -5,6 +5,10 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
+#define BLUE    "\033[34m"
+#define RESET   "\033[0m"
+
+
 // Load high scores from file
 // System calls used: open(), read(), close(), stat()
 int load_highscores(HighScore scores[], int max_scores) {
@@ -144,14 +148,14 @@ void display_highscores() {
     int printed_count = 0;
 
     printf("\n");
-    printf("╔═══════════════════════════════════════════════════════╗\n");
-    printf("║                    HIGH SCORES                        ║\n");
-    printf("╠════╦══════════════════╦═══════╦═══════╦═══════════════╣\n");
-    printf("║ #  ║ Name             ║ Score ║ Speed ║ Date          ║\n");
-    printf("╠════╬══════════════════╬═══════╬═══════╬═══════════════╣\n");
+    printf(BLUE "╔═══════════════════════════════════════════════════════╗\n" RESET);
+    printf(BLUE "║                    HIGH SCORES                        ║\n" RESET);
+    printf(BLUE "╠════╦══════════════════╦═══════╦═══════╦═══════════════╣\n" RESET);
+    printf(BLUE "║ #  ║ Name             ║ Score ║ Speed ║ Date          ║\n" RESET);
+    printf(BLUE "╠════╬══════════════════╬═══════╬═══════╬═══════════════╣\n" RESET);
 
     if (count == 0) {
-        printf("║              No high scores yet!                       ║\n");
+        printf(BLUE "║              No high scores yet!                       ║\n" RESET);
     } else {
         int rank = 1;
 
@@ -177,7 +181,7 @@ void display_highscores() {
             struct tm* tm_info = localtime(&scores[i].date);
             strftime(date_str, sizeof(date_str), "%Y-%m-%d", tm_info);
 
-            printf("║ %-2d ║ %-16s ║ %5d ║   %d   ║ %-13s ║\n",
+            printf(BLUE "║ %-2d ║ %-16s ║ %5d ║   %d   ║ %-13s ║\n" RESET,
                    rank++,
                    scores[i].name,
                    scores[i].score,
@@ -186,5 +190,5 @@ void display_highscores() {
         }
     }
 
-    printf("╚════╩══════════════════╩═══════╩═══════╩═══════════════╝\n");
+    printf(BLUE "╚════╩══════════════════╩═══════╩═══════╩═══════════════╝\n" RESET);
 }
