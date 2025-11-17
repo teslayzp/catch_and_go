@@ -16,8 +16,8 @@ $(TARGET): $(OBJS)
 	@echo "Build successful! Run with: ./$(TARGET)"
 
 # Compile catch.c
-main.o: catch.c highscore.h statistics.h
-	$(CC) $(CFLAGS) -c main.c
+catch.o: catch.c highscore.h statistics.h
+	$(CC) $(CFLAGS) -c catch.c
 
 # Compile highscore.c
 highscore.o: highscore.c highscore.h

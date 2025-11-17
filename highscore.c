@@ -133,33 +133,58 @@ int is_highscore(int score) {
 }
 
 // Display high scores (for terminal output after game)
+#include <string.h>
+
+// Display high scores (for terminal output after game)
 void display_highscores() {
     HighScore scores[MAX_HIGHSCORES];
     int count = load_highscores(scores, MAX_HIGHSCORES);
-    
+
+    char printed_names[MAX_HIGHSCORES][32];  // store unique names
+    int printed_count = 0;
+
     printf("\n");
     printf("╔═══════════════════════════════════════════════════════╗\n");
     printf("║                    HIGH SCORES                        ║\n");
     printf("╠════╦══════════════════╦═══════╦═══════╦═══════════════╣\n");
     printf("║ #  ║ Name             ║ Score ║ Speed ║ Date          ║\n");
     printf("╠════╬══════════════════╬═══════╬═══════╬═══════════════╣\n");
-    
+
     if (count == 0) {
         printf("║              No high scores yet!                       ║\n");
     } else {
+        int rank = 1;
+
         for (int i = 0; i < count; i++) {
+
+            // 1. Check if this name is already printed
+            int is_duplicate = 0;
+            for (int j = 0; j < printed_count; j++) {
+                if (strcmp(scores[i].name, printed_names[j]) == 0) {
+                    is_duplicate = 1;
+                    break;
+                }
+            }
+
+            if (is_duplicate)
+                continue;  // skip duplicated name
+
+            // 2. Mark this name as printed
+            strcpy(printed_names[printed_count++], scores[i].name);
+
+            // 3. Print the line
             char date_str[20];
             struct tm* tm_info = localtime(&scores[i].date);
             strftime(date_str, sizeof(date_str), "%Y-%m-%d", tm_info);
-            
+
             printf("║ %-2d ║ %-16s ║ %5d ║   %d   ║ %-13s ║\n",
-                   i + 1,
+                   rank++,
                    scores[i].name,
                    scores[i].score,
                    scores[i].speed_level,
                    date_str);
         }
     }
-    
+
     printf("╚════╩══════════════════╩═══════╩═══════╩═══════════════╝\n");
 }
