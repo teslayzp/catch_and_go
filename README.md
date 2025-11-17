@@ -1,6 +1,8 @@
 # catch_and_go
 # 🎣 Fishing Game - System Programming Project
 
+![ss](https://github.com/user-attachments/assets/b56ea07d-0836-4d86-ab41-c3a46e722453)
+
 ## 📖 Project Overview
 
 An interactive terminal-based fishing game built in C using system calls and ncurses library. Players control a fishing boat, catch fish at different speeds for varying points, and compete for high scores while managing limited lives and time.
