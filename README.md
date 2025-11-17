@@ -4,7 +4,7 @@
 
 
 
-![ss](https://github.com/user-attachments/assets/b56ea07d-0836-4d86-ab41-c3a46e722453)
+![ss](https://raw.githubusercontent.com/teslayzp/repo/main/assets/ss.gif)
 
 
 
