@@ -197,10 +197,13 @@ static void draw_boat_and_hook(int boat_x, int hook_depth) {
     if (boat_x + bw >= COLS) boat_x = COLS - bw - 1;
     if (boat_y >= 0) mvaddnstr(boat_y, boat_x, boat_top, COLS - boat_x);
     if (boat_y + 1 >= 0) mvaddnstr(boat_y + 1, boat_x, boat_hull, COLS - boat_x);
+    attroff(COLOR_PAIR(1));
 
     int line_x = boat_x + bw / 2;
     int line_start_y = water_y + 1;
     int line_end_y = line_start_y + hook_depth;
+    
+    attron(COLOR_PAIR(5));
     if (line_x >= 0 && line_x < COLS) {
         for (int y = line_start_y; y < LINES; y++) {
             mvaddch(y, line_x, ' ');
@@ -210,7 +213,7 @@ static void draw_boat_and_hook(int boat_x, int hook_depth) {
         }
         if (line_end_y < LINES) mvaddch(line_end_y, line_x, 'J');
     }
-    attroff(COLOR_PAIR(1));
+    attroff(COLOR_PAIR(5));
 
 }
 

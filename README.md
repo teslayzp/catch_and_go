@@ -1,6 +1,10 @@
 # catch_and_go
 # 🎣 Fishing Game - System Programming Project
 
+Course: ELEC462 System Programming
+Team Number: KNU-ELEC462-Team-9
+Members: Ye Zaw Phyo, 전민영, 정영재  
+
 ## 📖 Project Overview
 
 An interactive terminal-based fishing game built in C using system calls and ncurses library. Players control a fishing boat, catch fish at different speeds for varying points, and compete for high scores while managing limited lives and time.
@@ -133,6 +137,8 @@ make help          # Show all commands
 | `Ctrl+C` | Quit (with confirmation) |
 | `q` | Quick quit |
 
+---
+
 ### Game Mechanics
 
 **Objective:** Catch as many fish as possible within 30 seconds!
@@ -145,132 +151,13 @@ make help          # Show all commands
 
 **Lives:** You have 3 lives. Lose a life when hook returns without catching fish.
 
-**Winning Strategy:**
-- Higher speed = harder to catch fish but more points
-- Time your hook drops carefully
-- Position boat to intercept fish paths
-- Watch fish movement patterns
-
-### Menu Options
-
-1. **Start New Game** - Begin a new fishing session
-2. **View High Scores** - See top 10 players
-3. **View Game History** - Browse recent games
-4. **View Player Statistics** - Check personal stats
-5. **Exit** - Quit the game
-
----
-
-## 📊 Technical Implementation
-
-### File Storage Format
-
-**High Scores** (`highscores.dat`):
-- Binary file format
-- Struct: `{name[20], score, speed_level, timestamp}`
-- Max 10 entries, sorted by score
-
-**Game Statistics** (`game_stats.log`):
-- Binary log format
-- Struct: `{timestamp, name[20], score, caught, missed, speed, lives, duration}`
-- Unlimited entries (append-only)
-
-### Key System Programming Features
-
-1. **Low-level File I/O**
-   - Direct system calls instead of stdio
-   - Binary file operations for efficiency
-   - Error handling with perror()
-
-2. **Signal Handling**
-   - Custom handlers for SIGINT (Ctrl+C)
-   - Custom handlers for SIGTSTP (Ctrl+Z)
-   - Graceful pause and quit mechanisms
-
-3. **Real-time Processing**
-   - ncurses for terminal control
-   - Non-blocking input handling
-   - Frame-based animation system
-
-4. **Data Persistence**
-   - Atomic file operations
-   - Data integrity checks
-   - Automatic backup on errors
-
----
-
-## 🎯 Code Statistics
-
-- **Total Lines:** ~850 lines (excluding comments) ✅
-- **System Calls:** 8 different types ✅
-- **Core Functionalities:** 3 major features ✅
-- **Files:** 5 source files + headers
-
----
-
-## 🐛 Known Issues & Limitations
-
-- Terminal must be at least 80x24 for proper display
-- No network multiplayer (Phase 4 - future enhancement)
-- High score file not encrypted (player names can be modified)
-
----
-
-## 🔮 Future Enhancements (Bonus Features)
-
-### Phase 4: Network Multiplayer (Planned)
-- Socket programming for online play
-- Server-client architecture
-- Real-time leaderboards
-- Multiple concurrent players
-
-### Additional Ideas
-- Pthread for smoother animations
-- Different fish types with varying points
-- Power-ups and obstacles
-- Tournament mode
-
----
-
-## 📝 Testing
-
-### Test Cases
-
-1. **Normal Gameplay**
-   - Start game, catch fish, complete normally
-   - Verify score calculation at different speeds
-   - Check lives decrement on misses
-
-2. **High Score System**
-   - Complete game with high score
-   - Verify score saved correctly
-   - Check ranking order
-   - Test with duplicate scores
-
-3. **Statistics Tracking**
-   - Play multiple games
-   - Verify all stats logged correctly
-   - Check player-specific filtering
-   - Test history display
-
-4. **Signal Handling**
-   - Test Ctrl+C quit confirmation
-   - Test Ctrl+Z pause/resume
-   - Verify timer pauses correctly
-
-5. **Edge Cases**
-   - Empty high score file
-   - Corrupted data files
-   - Very long player names
-   - Terminal resize during game
-
 ---
 
 ## 📚 References
-
-- Stevens, W. Richard. "Advanced Programming in the UNIX Environment"
+- Bruce Molay."Understanding Unix/Linux Programming"
 - Linux man pages: open(2), read(2), write(2), signal(2)
 - ncurses Programming Guide
+- ELEC462 Course Materials
 ---
 
 ## 📄 License
@@ -281,6 +168,6 @@ This project is created for educational purposes as part of KNU-ELEC462 System P
 
 ## 🙋 Support
 
-For questions or issues, contact: shainewaiyar@gmail.com
+For questions or issues, contact: shainewaiyar@gmail.com, mym0314@naver.com, jyj0522@kakao.com
 
 **Enjoy fishing! 🎣**
