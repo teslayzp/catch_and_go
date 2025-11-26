@@ -1,9 +1,11 @@
 # catch_and_go
 # 🎣 Fishing Game - System Programming Project
 
-Course: ELEC462 System Programming
-Team Number: KNU-ELEC462-Team-9
-Members: Ye Zaw Phyo, 전민영, 정영재  
+- Course: ELEC462 System Programming
+- Team Number: KNU-ELEC462-Team-9
+- Members: Ye Zaw Phyo, 전민영, 정영재  
+
+---
 
 ## 📖 Project Overview
 
